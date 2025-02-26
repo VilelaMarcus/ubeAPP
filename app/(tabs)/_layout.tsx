@@ -1,7 +1,7 @@
+// app/(tabs)/_layout.tsx
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Image } from 'react-native';
-import { icons } from '../../assets/icons'; // <--- central icon mapping
+import { icons } from '../../assets/icons';
 
 type IconKeys = 'inicio' | 'debitos' | 'destaques' | 'agendamentos' | 'noticias';
 
@@ -11,20 +11,10 @@ export default function Layout() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ size }) => {
+          // Map 'index' to 'inicio'
           const iconKey = route.name === 'index' ? 'inicio' : route.name;
-          const iconSource = icons[iconKey as IconKeys];
-
-          return (
-            <Image
-              source={iconSource}
-              style={{
-                width: size,
-                height: size,
-                tintColor: 'black', // force black
-              }}
-              resizeMode="contain"
-            />
-          );
+          const IconComponent = icons[iconKey as IconKeys];
+          return <IconComponent width={size} height={size} fill="black" />;
         },
         tabBarActiveTintColor: 'black',
         tabBarInactiveTintColor: 'black',

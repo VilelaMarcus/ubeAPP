@@ -1,0 +1,47 @@
+import React from 'react';
+import { View, Image, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import UserIcon from '../../assets/icons/User.svg'; // Import the SVG as a component
+
+const Header: React.FC = () => {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {/* Logo on the left */}
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        {/* User icon on the right as an SVG component */}
+        <UserIcon width={24} height={24} fill="black" style={styles.userIcon} />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: '#fff', // ensure the background color covers the safe area
+  },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 48,
+    paddingHorizontal: 1,
+    paddingVertical: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  logo: {
+    width: 87,
+    height: 48,
+    left: 8,
+  },
+  userIcon: {
+    marginRight: 12, // Add right margin to the UserIcon
+  },
+});
+
+export default Header;
