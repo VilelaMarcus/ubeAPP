@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function HomeScreen() {
+export default function NoticiasScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>This is the Início (Home) Screen</Text>
+      <Text style={styles.text}>This is the Notícias Screen</Text>
     </View>
   );
 }
