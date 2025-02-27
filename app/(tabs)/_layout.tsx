@@ -18,7 +18,7 @@ export default function Layout() {
         },
         tabBarActiveTintColor: 'black',
         tabBarInactiveTintColor: 'black',
-        tabBarLabelStyle: { fontSize: 12 },
+        tabBarLabelStyle: { fontSize: 11 },
       })}
     >
       <Tabs.Screen name="index" options={{ title: 'Início' }} />

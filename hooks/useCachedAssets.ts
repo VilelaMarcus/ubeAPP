@@ -8,9 +8,9 @@ export default function useCachedAssets() {
 
   useEffect(() => {
     async function loadAssets() {
-      const imageAssets = Object.values(icons).map((icon) =>
-        Asset.loadAsync(icon)
-      );
+      const imageAssets = Object.values(icons)
+        .filter((icon) => typeof icon === 'string' || typeof icon === 'number' || Array.isArray(icon))
+        .map((icon) => Asset.loadAsync(icon));
       await Promise.all(imageAssets);
       setIsReady(true);
     }
