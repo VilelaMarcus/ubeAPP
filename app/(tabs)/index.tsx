@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
   View,
   Text,
-  Image,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import SearchInput from '../../components/molecules/SearchInput';
-import Via2Iptu from '../../assets/icons/Via2Iptu.svg';
-import Agendamentos from '../../assets/icons/Agendamentos.svg';
-import Infracoes from '../../assets/icons/Infracoes.svg';
-import Certidao from '../../assets/icons/Certidao.svg';
+import ServiceCard from '../../components/atoms/ServiceCard';
+import { iconMapper } from '@/types/ServicesType';
 
 // Get device dimensions
 const { height: windowHeight, width: windowWidth } = Dimensions.get('window');
@@ -28,32 +25,54 @@ const sliderImages = [
   require('../../assets/images/slide3.png'),
 ];
 
-// Dummy data for recent services
-const recentServices = [
-  { id: 1, title: '2ª via de IPTU' },
-  { id: 2, title: 'Agendamentos' },
-  { id: 3, title: 'Infrações' },
-  { id: 4, title: 'Emitir Certidão' },
+// Default data for recent services
+const defaultRecentServices = [
+  { id: 1, title: '2ª via de IPTU', Icon: iconMapper.IPTU },
+  { id: 2, title: 'Agendamentos', Icon: iconMapper.AGENDAMENTO },
+  { id: 3, title: 'Infrações', Icon: iconMapper.INFRACOES },
+  { id: 4, title: 'Emitir Certidão', Icon: iconMapper.CERTIDAO },
 ];
 
 export default function HomeScreen() {
   // Mock user data
   const userName = 'Reginaldo';
-
-  // State to track the current slider index
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const sliderWidth = windowWidth * 0.85;
-
-  const handleScroll = (event: { nativeEvent: { contentOffset: { x: any; }; }; }) => {
-    const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const index = Math.round(contentOffsetX / sliderWidth);
-    setCurrentIndex(index);
-  };
-
-  // Limit the number of dots to a maximum of 5
-  const dotsCount = sliderImages.length > 5 ? 5 : sliderImages.length;
-
+  // State for search input
   const [searchValue, setSearchValue] = useState('');
+  // State for recent services
+  const [recentServices, setRecentServices] = useState(defaultRecentServices);
+
+  useEffect(() => {
+    // Load recent services from AsyncStorage
+    const loadRecentServices = async () => {
+      try {
+        const storedServices = await AsyncStorage.getItem('recentServices');
+        if (storedServices) {
+          const parsedServices = JSON.parse(storedServices);
+          const updatedServices = parsedServices.map((service: { id: string | number; }) => ({
+            ...service,
+            Icon: iconMapper[service.id as keyof typeof iconMapper],
+          }));
+          setRecentServices(updatedServices);
+        }
+      } catch (error) {
+        console.error('Failed to load recent services:', error);
+      }
+    };
+
+    loadRecentServices();
+  }, []);
+
+  const handleServicePress = async (service: any) => {
+    try {
+      // Update recent services
+      const updatedServices = [service, ...recentServices.filter(s => s.id !== service.id)].slice(0, 4);
+      setRecentServices(updatedServices);
+      // Store updated services in AsyncStorage
+      await AsyncStorage.setItem('recentServices', JSON.stringify(updatedServices));
+    } catch (error) {
+      console.error('Failed to update recent services:', error);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -61,10 +80,8 @@ export default function HomeScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView style={styles.container}>
-
         {/* User Greeting */}
         <Text style={styles.greeting}>Olá, {userName} ;)</Text>
-        
         <Text style={styles.subGreeting}>Comece por aqui</Text>
         
         {/* Global SearchInput */}
@@ -78,19 +95,35 @@ export default function HomeScreen() {
 
         {/* Últimos Serviços Section */}
         <View style={styles.servicesContainer}>
-          
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Últimos Serviços</Text>
             <Text style={styles.labels}>Ver todas</Text>
           </View>
-
+          {/* Existing text-based service buttons */}
           <View style={styles.servicesButtonsContainer}>
-            {recentServices.map((service) => (
-              <TouchableOpacity key={service.id} style={styles.serviceButton}>
+            {recentServices.map(service => (
+              <TouchableOpacity
+                key={service.id}
+                style={styles.serviceButton}
+                onPress={() => handleServicePress(service)}
+              >
                 <Text style={styles.serviceButtonText}>{service.title}</Text>
               </TouchableOpacity>
             ))}
           </View>
+
+          {/* New Service Cards Section */}
+          <View style={styles.serviceCardsContainer}>
+            {recentServices.map(item => (
+              <ServiceCard
+                key={item.id}
+                title={item.title}
+                Icon={item.Icon}
+                style={styles.serviceCard}
+              />
+            ))}
+          </View>
+
           <TouchableOpacity style={styles.viewAllButton}>
             <Text style={styles.viewAllText}>Ver todos</Text>
           </TouchableOpacity>
@@ -105,41 +138,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
     backgroundColor: '#fff',
-  },
-  // Wrapper to hold both the slider and dots
-  sliderWrapper: {
-    marginTop: 0,
-    marginLeft: 30,
-    width: windowWidth * 0.85,
-  },
-  sliderContainer: {
-    height: windowHeight * 0.5,
-    width: windowWidth * 0.85,
-  },
-  slideImage: {
-    width: windowWidth * 0.85,
-    height: windowHeight * 0.5,
-    borderRadius: 10,
-    marginRight: 10,
-  },
-  paginationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  dot: {
-    width: 8,
-    marginTop: 4,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 3,
-  },
-  activeDot: {
-    backgroundColor: '#3498db',
-  },
-  inactiveDot: {
-    backgroundColor: '#ccc',
   },
   greeting: {
     fontSize: 24,
@@ -157,20 +155,26 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 20,
   },
-  searchInput: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    padding: 10,
-  },
   servicesContainer: {
     marginTop: 30,
     marginHorizontal: 20,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#3B3B3B',
     marginBottom: 10,
+  },
+  labels: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#757575',
+    marginHorizontal: 20,
   },
   servicesButtonsContainer: {
     flexDirection: 'row',
@@ -198,10 +202,14 @@ const styles = StyleSheet.create({
     color: '#3498db',
     fontSize: 14,
   },
-  labels: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#757575',
-    marginHorizontal: 20,
+  // New Service Cards Container styling
+  serviceCardsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  serviceCard: {
+    marginBottom: 15,
   },
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, ViewStyle } from 'react-native';
-import SeachIcon from '../../assets/icons/Search.svg';
-import MicIcon from '../../assets/icons/Mic.svg'; 
+import SeachIcon from '../../assets/icons/search.svg';
+import MicIcon from '../../assets/icons/microfone.svg'; 
 
 interface SearchInputProps {
   placeholder?: string;

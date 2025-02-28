@@ -1,9 +1,9 @@
 // assets/icons/index.ts
-import Inicio from './Home.svg';
-import Debitos from './Debitos.svg';
-import Destaques from './Destaques.svg';
-import Agendamentos from './Agendamento.svg';
-import Noticias from './Noticias.svg';
+import Inicio from './home.svg';
+import Debitos from './debitos.svg';
+import Destaques from './destaques.svg';
+import Agendamentos from './agendamento.svg';
+import Noticias from './noticias.svg';
 
 export const icons = {
   inicio: Inicio,

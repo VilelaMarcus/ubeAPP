@@ -1,47 +1,42 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, StyleProp } from 'react-native';
+import { SvgProps } from 'react-native-svg';
 
 interface ServiceCardProps {
   title: string;
-  Icon: React.FC<{ width: number; height: number; fill?: string; style?: StyleProp<ViewStyle> }>;
+  Icon: React.FC<SvgProps>;
   style?: StyleProp<ViewStyle>;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ title, Icon, style }) => {
   return (
     <View style={[styles.card, style]}>
-      {/* Icon rendered as an SVG component */}
-      <Icon width={24} height={24} fill="#117AE7" style={styles.icon} />
-      {/* Title below the icon */}
+      <Icon width={30} height={30} />
       <Text style={styles.title}>{title}</Text>
     </View>
   );
 };
 
-export default ServiceCard;
-
 const styles = StyleSheet.create({
   card: {
-    width: 130,
-    height: 86,
-    borderRadius: 8,
+    width: '48%',
     backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    justifyContent: 'center',
+    borderRadius: 8,
+    padding: 10,
     alignItems: 'center',
-  },
-  icon: {
-    marginBottom: 5,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   title: {
-    fontSize: 14,
-    color: '#000',
+    marginTop: 10,
+    fontSize: 13,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
+
+export default ServiceCard;

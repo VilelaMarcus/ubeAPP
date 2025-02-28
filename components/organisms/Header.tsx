@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import UserIcon from '../../assets/icons/User.svg'; // Import the SVG as a component
+import UserIcon from '../../assets/icons/user.svg'; // Import the SVG as a component
 
 const Header: React.FC = () => {
     return (
