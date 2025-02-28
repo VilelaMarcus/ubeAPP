@@ -13,6 +13,10 @@ import {
 } from 'react-native';
 
 import SearchInput from '../../components/molecules/SearchInput';
+import Via2Iptu from '../../assets/icons/Via2Iptu.svg';
+import Agendamentos from '../../assets/icons/Agendamentos.svg';
+import Infracoes from '../../assets/icons/Infracoes.svg';
+import Certidao from '../../assets/icons/Certidao.svg';
 
 // Get device dimensions
 const { height: windowHeight, width: windowWidth } = Dimensions.get('window');
@@ -165,6 +169,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#3B3B3B',
     marginBottom: 10,
   },
   servicesButtonsContainer: {
